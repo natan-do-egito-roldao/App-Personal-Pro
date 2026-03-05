@@ -1,0 +1,42 @@
+const handleLogin = async (email, password) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/login`, {
+      email,
+      password,
+    });
+    
+    // ✅ Salva como string
+    await AsyncStorage.setItem("accesstoken", response.data.accesstoken);
+    await AsyncStorage.setItem("RefreshToken", response.data.RefreshToken);
+    await AsyncStorage.setItem('isLoggedIn', 'true');
+    
+    setIsLoggedIn(true);
+    setView('home');
+  } catch (error) { 
+    console.log("ERRO COMPLETO:", error); 
+  }
+};
+
+const handleLogout = async () => {
+  try {
+    // ✅ Recupera o token como string
+    const refreshToken = await AsyncStorage.getItem("RefreshToken");
+    console.log("Token recuperado:", refreshToken?.substring(0, 20) + "...");
+    
+    const response = await axios.post(`${API_URL}/auth/logout`, {
+      refreshToken: "Bearer " + refreshToken  // ✅ Concatenação correta
+    });
+    
+    // ✅ removeItem só precisa da key, sem argumentos extras
+    await AsyncStorage.removeItem("accesstoken");
+    await AsyncStorage.removeItem("RefreshToken");
+    await AsyncStorage.setItem('isLoggedIn', 'false');
+    
+    if (response.status == 200) {
+      setIsLoggedIn(false);
+      setView('login');
+    }
+  } catch (error) {
+    console.log("ERRO COMPLETO:", error); 
+  }
+};
