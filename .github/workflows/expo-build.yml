@@ -4,28 +4,29 @@ on:
   push:
     branches:
       - main
-      - master
 
 jobs:
+  - name: Semantic Release
+  run: npx semantic-release
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm ci
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli@latest
+      - run: npm install -g eas-cli@latest
 
-      - name: Build Android
-        run: eas build --platform android --non-interactive
+      - run: eas build --platform android --profile preview --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
