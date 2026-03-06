@@ -4,16 +4,19 @@ import {
   StatusBar,
   Text,
   TouchableOpacity,
-  View
+  View,
+  KeyboardAvoidingView, 
+  Platform,
+  ScrollView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { HomeView } from './components/HomeView';
+import {AdminCreateWorkout} from './components/AddTraining';
 import { LoginView } from './components/LoginView';
 import { WorkoutProgressView } from './components/WorkoutProgressView';
-import { MOCK_WORKOUT } from './utils/mockData';
 import { styles } from './utils/styles';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -21,6 +24,7 @@ export default function App() {
   // initial view state (string can be 'login', 'home' or 'workout')
   const [view, setView] = useState('login');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     LoggedIn();
@@ -78,9 +82,16 @@ export default function App() {
 
   if (!isLoggedIn) {
     return (
-      <SafeAreaProvider>
-        <LoginView onLogin={handleLogin} />
-      </SafeAreaProvider>
+        <SafeAreaProvider style={{backgroundColor: "#09090b"}}>
+          <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <ScrollView style={{flex : 1}} contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
+              <LoginView onLogin={handleLogin} />
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </SafeAreaProvider>
     );
   }
 
@@ -89,12 +100,23 @@ export default function App() {
       <SafeAreaView  style={styles.mainContainer}>
       <StatusBar barStyle="light-content" />
       <View style={styles.content}>
-        {view === 'home' ? (
-          <HomeView workout={MOCK_WORKOUT} onStartWorkout={() => setView('workout')} />
-        ) : (
-          <WorkoutProgressView workout={MOCK_WORKOUT} onFinish={() => setView('home')} />
+        {/* Lógica de Navegação Customizada */}
+        {view === 'home' && (
+          <HomeView 
+            onStartWorkout={() => setView('workout')} 
+            onAdm={() => setView('ADM')} 
+          />
+        )}
+        
+        {view === 'workout' && (
+          <WorkoutProgressView onFinish={() => setView('home')} />
+        )}
+
+        {view === 'ADM' && (
+          <AdminCreateWorkout onFinish={() => setView('home')} />
         )}
       </View>
+
 
       <View style={styles.navBar}>
         <TouchableOpacity 

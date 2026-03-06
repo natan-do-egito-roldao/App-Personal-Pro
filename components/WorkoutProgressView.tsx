@@ -7,19 +7,17 @@ import {
     View
 } from 'react-native';
 import { styles } from '../utils/styles';
-import { Workout } from '../utils/types';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import traningDay from '../scripts/traningDay.js';
 
 interface WorkoutProgressViewProps {
-  workout: Workout;
   onFinish: () => void;
 }
 
-export const WorkoutProgressView: React.FC<WorkoutProgressViewProps> = ({ workout, onFinish }) => {
-  const [exercises, setExercises] = useState(workout.exercises);
+export const WorkoutProgressView: React.FC<WorkoutProgressViewProps> = ({onFinish }) => {
+  const [exercises, setExercises] = useState([]);
   const [restTime, setRestTime] = useState(0);
   const [isResting, setIsResting] = useState(false);
   const [traning, setTraning] = useState(null);

@@ -9,18 +9,19 @@ import {
     ActivityIndicator 
 } from 'react-native';
 import { styles } from '../utils/styles';
-import { Workout } from '../utils/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import trainingDay from '../scripts/traningDay.js';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import { useNavigation } from '@react-navigation/native';
+import SkeletonHome from './SkeletonHome';
 
 interface HomeViewProps {
-  workout: Workout;
   onStartWorkout: () => void;
+  onAdm: () => void;
 }
 
-export const HomeView: React.FC<HomeViewProps> = ({ workout, onStartWorkout }) => {
+export const HomeView: React.FC<HomeViewProps> = ({onStartWorkout, onAdm}) => {
   const [user, setUser] = useState(null);
   const [nivel, setNivel] = useState(null);
   const [traning, setTraning] = useState(null);
@@ -68,7 +69,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ workout, onStartWorkout }) =
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" />;
+    return <SkeletonHome />
   }
 
   return (
@@ -78,9 +79,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ workout, onStartWorkout }) =
           <Text style={styles.greeting}>Olá, {user.nome} 👋</Text>
           <Text style={styles.headerTitle}>Pronto para hoje?</Text>
         </View>
-        <View style={styles.avatar}>
-          <User color="#a1a1aa" size={20} />
-        </View>
+        <TouchableOpacity onPress={onAdm}>
+          <View style={styles.avatar}>
+            <User color="#a1a1aa" size={20} />
+          </View>
+        </TouchableOpacity>
       </View>
 
 {/*       <View style={styles.statsGrid}>
