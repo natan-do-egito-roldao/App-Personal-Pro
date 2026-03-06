@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
 
   semantic-release:
@@ -20,9 +23,10 @@ jobs:
       - run: npm ci --prefer-offline
 
       - name: Semantic Release
-        run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+            GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: npx semantic-release
+
 
   build:
     runs-on: ubuntu-latest
