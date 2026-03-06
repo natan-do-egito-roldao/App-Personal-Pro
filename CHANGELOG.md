@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/natan-do-egito-roldao/App-Personal-Pro/compare/v1.0.0...v1.0.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* load err treinos, add criação de treino, add icons ([02d2186](https://github.com/natan-do-egito-roldao/App-Personal-Pro/commit/02d218637c6f3583584a2ed7d0c6a4b0488b300c))
+
 # 1.0.0 (2026-03-06)
 
 
